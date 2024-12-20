@@ -173,6 +173,33 @@ export class UsersService {
  async comparePassword(password:string, hashedPassword:string):Promise<boolean>{
   return await bcrypt.compare(password, hashedPassword);
  }
+
+ //get loggedinjuser
+
+//  async getLoggedInUser(req:any){
+//   const user = req.user;
+//   const refreshToken =req.refreshToken;
+//   const accessToken =req.accessToken;
+
+//   console.log(refreshToken)
+
+
+//   console.log({user, refreshToken,accessToken})
+//   return {user, refreshToken, accessToken}
+//  }
+
+async getLoggedInUser(req: any) {
+  const user = req.user;
+  const refreshToken = req.refreshtoken;
+  const accessToken = req.accesstoken;
+
+  
+  // console.log({ user, 'refrsh':refreshToken, 'access':accessToken });
+
+  return { user, refreshToken, accessToken };
+}
+
+
  //get all userservicr
  async getUsers(){
   return this.prisma.user.findMany({})
