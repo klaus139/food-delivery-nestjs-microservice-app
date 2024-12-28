@@ -200,6 +200,16 @@ async getLoggedInUser(req: any) {
 }
 
 
+//logout user
+async Logout(req:any){
+  req.user = null;
+  req.refreshToken = null;
+  req.accessToken = null;
+
+  return {message:'Logged out successfully'}
+}
+
+
  //get all userservicr
  async getUsers(){
   return this.prisma.user.findMany({})

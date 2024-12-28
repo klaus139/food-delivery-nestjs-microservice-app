@@ -1,0 +1,33 @@
+/* globals.css */
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --background: #ffffff;
+  --foreground: #171717;
+  --textcolor: #ffffff; /* White text color */
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --background: #0a0a0a;
+    --foreground: #ededed;
+    --textcolor: #ededed; /* Light text color for dark mode */
+  }
+}
+
+body {
+  color: var(--foreground);
+  background: var(--background);
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+a {
+  color: var(--textcolor); /* Use text color variable for links */
+}
+
+/* Optional: Modify link hover color */
+a:hover {
+  color: #37b668; /* Or any color you prefer for hover */
+}
