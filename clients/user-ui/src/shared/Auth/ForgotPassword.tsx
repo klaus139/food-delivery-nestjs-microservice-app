@@ -1,6 +1,6 @@
-"use client"
+
 import styles from '@/src/utils/style'
-import React,{useState} from 'react'
+import React from 'react'
 import {z} from "zod"
 import { useForm, SubmitHandler } from "react-hook-form"
 import {zodResolver} from "@hookform/resolvers/zod"
@@ -19,7 +19,7 @@ type ForgotPasswordSchema = z.infer<typeof formSchema>;
 const ForgotPassword = ({setActiveState, }:{setActiveState:(e:string) => void}) => {
 
 
-    const [show, setShow] = useState(false)
+    
     const {register, handleSubmit, formState:{errors, isSubmitting}, reset} = useForm<ForgotPasswordSchema>({
         resolver:zodResolver(formSchema),
     });

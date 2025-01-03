@@ -51,3 +51,11 @@ export class LoginDto{
 
 }
 
+@InputType()
+export class ForgotPassDto{
+    @Field()
+    @IsNotEmpty({message:"Email is required."})
+    @IsEmail({}, {message:"Email is invalid."})
+    email:string
+
+}
