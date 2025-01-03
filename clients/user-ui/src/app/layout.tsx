@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Geist, Geist_Mono, Poppins } from "next/font/google";
 import "./globals.css";
 import { Providers } from "../providers/NextUIProvider";
+import { Toaster } from "react-hot-toast";
 
 
 const geistSans = Geist({
@@ -38,6 +39,7 @@ export default function RootLayout({
         className={`${poppins.variable}  ${geistMono.variable} text-white`}
       >
         <Providers>
+          <Toaster position="top-center" reverseOrder={false} />
         {children}
         </Providers>
       </body>

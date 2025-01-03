@@ -63,10 +63,9 @@
 //                 },
 //                 {
 //                     secret:this.config.get<string>('ACCESS_TOKEN_SECRET'),
-//                 expiresIn:'15m',                
+//                 expiresIn:'15m',
 //             },
 //             );
-
 
 //             const refreshToken = this.jwtService.sign(
 //                 {
@@ -74,7 +73,7 @@
 //                 },
 //                 {
 //                     secret:this.config.get<string>('REFRESH_TOKEN_SECRET'),
-//                 expiresIn:'7d',                
+//                 expiresIn:'7d',
 //             },
 //             );
 
@@ -82,7 +81,6 @@
 //             req.refreshToken = refreshToken;
 //             req.user = user;
 
-            
 //         }catch(error){
 //             console.log(error)
 
@@ -91,63 +89,63 @@
 //     // async canActivate(context: ExecutionContext): Promise<boolean> {
 //     //     const gqlContext = GqlExecutionContext.create(context);
 //     //     const { req } = gqlContext.getContext();
-      
+
 //     //     // Check if tokens are present in headers
 //     //     const accessToken = req.headers.accessToken as string;
 //     //     const refreshToken = req.headers.refreshToken as string;
-      
+
 //     //     console.log("AccessToken:", accessToken);
 //     //     console.log("RefreshToken:", refreshToken);
-      
+
 //     //     if (!accessToken || !refreshToken) {
 //     //       throw new UnauthorizedException('Please login to access this resource');
 //     //     }
-      
+
 //     //     if (accessToken) {
 //     //       try {
 //     //         // Validate the access token
 //     //         const decoded = this.jwtService.verify(accessToken, {
 //     //           secret: this.config.get<string>('ACCESS_TOKEN_SECRET'),
 //     //         });
-      
+
 //     //         console.log("AccessToken Decoded:", decoded);
-      
+
 //     //         if (!decoded) {
 //     //           throw new UnauthorizedException('Invalid Access Token');
 //     //         }
-      
+
 //     //         await this.updateAccessToken(req);
 //     //       } catch (error) {
 //     //         console.error("AccessToken Validation Error:", error);
 //     //         throw new UnauthorizedException('Invalid Access Token');
 //     //       }
 //     //     }
-      
+
 //     //     return true;
 //     //   }
 
 //     //   private async updateAccessToken(req: any): Promise<void> {
 //     //     try {
 //     //       const refreshTokenData = req.headers.refreshToken as string;
-      
+
 //     //       console.log("RefreshToken for updating access token:", refreshTokenData);
-      
+
 //     //       const decoded = this.jwtService.verify(refreshTokenData, {
 //     //         secret: this.config.get<string>('REFRESH_TOKEN_SECRET'),
 //     //       });
-      
+
 //     //       console.log("Decoded RefreshToken:", decoded);
-      
+
 //     //       if (!decoded) {
 //     //         throw new UnauthorizedException('Invalid refresh Token');
 //     //       }
-      
+
 //     //       const user = await this.prisma.user.findUnique({
 //     //         where: {
 //     //           id: decoded.id,
 //     //         },
 //     //       });
-      
+
 //     //       const accessToken = this.jwtService.sign(
 //     //         { id: user.id },
 //     //         {
@@ -155,7 +153,7 @@
 //     //           expiresIn: '15m',
 //     //         }
 //     //       );
-      
+
 //     //       const refreshToken = this.jwtService.sign(
 //     //         { id: user.id },
 //     //         {
@@ -163,26 +161,30 @@
 //     //           expiresIn: '7d',
 //     //         }
 //     //       );
-      
+
 //     //       req.accessToken = accessToken;
 //     //       req.refreshToken = refreshToken;
 //     //       req.user = user;
-      
+
 //     //       console.log("New AccessToken:", accessToken);
 //     //       console.log("New RefreshToken:", refreshToken);
 //     //     } catch (error) {
 //     //       console.error("Refresh Token Validation Error:", error);
 //     //     }
 //     //   }
-      
-      
+
 // }
 
-import { CanActivate, ExecutionContext, Injectable, UnauthorizedException } from "@nestjs/common";
-import { JwtService } from "@nestjs/jwt";
-import { PrismaService } from "../../../../prisma/prisma.service";
-import { ConfigService } from "@nestjs/config";
-import { GqlExecutionContext } from "@nestjs/graphql";
+import {
+  CanActivate,
+  ExecutionContext,
+  Injectable,
+  UnauthorizedException,
+} from '@nestjs/common';
+import { JwtService } from '@nestjs/jwt';
+import { PrismaService } from '../../../../prisma/prisma.service';
+import { ConfigService } from '@nestjs/config';
+import { GqlExecutionContext } from '@nestjs/graphql';
 
 @Injectable()
 export class AuthGuard implements CanActivate {
@@ -220,22 +222,36 @@ export class AuthGuard implements CanActivate {
       try {
         const decoded = this.jwtService.verify(accessToken, {
           secret: this.config.get<string>('ACCESS_TOKEN_SECRET'),
+          //ignoreExpiration: false,  // Ensure expiration is checked
         });
+        //console.log('code',decoded)
 
         //console.log("AccessToken Decoded:", decoded);
 
         if (!decoded) {
           throw new UnauthorizedException('Invalid Access Token');
         }
+        // const expirationTime = decoded?.exp * 1000;
+        // if (expirationTime < Date.now()) {
+        //   await this.updateAccessToken(req);
+        // }
 
         // Proceed to update the access token if valid
         await this.updateAccessToken(req);
       } catch (error) {
-        console.error("AccessToken Validation Error:", error);
+        console.error('AccessToken Validation Error:', error);
         throw new UnauthorizedException('Invalid Access Token');
       }
     }
 
+    // if (accessToken) {
+    //   const decoded = this.jwtService.decode(accessToken);
+
+    //   const expirationTime = decoded?.exp;
+    //   if (expirationTime < Date.now()) {
+    //     await this.updateAccessToken(req);
+    //   }
+    // }
     return true;
   }
 
@@ -269,7 +285,7 @@ export class AuthGuard implements CanActivate {
         {
           secret: this.config.get<string>('ACCESS_TOKEN_SECRET'),
           expiresIn: '15m',
-        }
+        },
       );
 
       const refreshToken = this.jwtService.sign(
@@ -277,7 +293,7 @@ export class AuthGuard implements CanActivate {
         {
           secret: this.config.get<string>('REFRESH_TOKEN_SECRET'),
           expiresIn: '7d',
-        }
+        },
       );
 
       // Attach the new tokens and user to the request
@@ -285,10 +301,10 @@ export class AuthGuard implements CanActivate {
       req.refreshtoken = refreshToken;
       req.user = user;
 
-    //   console.log("New AccessToken:", accessToken);
-    //   console.log("New RefreshToken:", refreshToken);
+      //   console.log("New AccessToken:", accessToken);
+      //   console.log("New RefreshToken:", refreshToken);
     } catch (error) {
-      console.error("Refresh Token Validation Error:", error);
+      console.error('Refresh Token Validation Error:', error);
     }
   }
 }

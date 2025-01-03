@@ -31,3 +31,44 @@ a {
 a:hover {
   color: #37b668; /* Or any color you prefer for hover */
 }
+
+input[type="number"]{
+  -moz-appearance: textfield;
+}
+
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button{
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+@keyframes shake {
+  0%{
+    transform: translate(0);
+  }
+  20%{
+    transform: translate(-2px);
+  }
+  40%{
+    transform: translate(2px);
+  }
+  60%{
+    transform: translate(-2px);
+  }
+  80%{
+    transform: translate(2px);
+  }
+  100%{
+    transform: translate(0);
+  }
+}
+
+.shake {
+  animation: shake 0.5s ease-in-out;
+}
+
+.input-field:focus {
+  outline: none;
+  border-color: #497DF2;
+  box-shadow: 0 0 5px rgba(73, 125, 242, 0.5);
+}
