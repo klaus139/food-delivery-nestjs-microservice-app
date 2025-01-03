@@ -7,8 +7,9 @@ import {
   LoginResponse,
   LogoutResponse,
   RegisterResponse,
+  ResetPasswordResponse,
 } from './types/user.types';
-import { ActivationDto, ForgotPassDto, RegisterDto } from './dto/user.dto';
+import { ActivationDto, ForgotPasswordDto, RegisterDto, ResetPasswordDto } from './dto/user.dto';
 import { User } from './entities/user.entity';
 import { Response } from 'express';
 import { AuthGuard } from './guards/auth.guard';
@@ -64,12 +65,18 @@ export class UsersResolver {
     return await this.userService.getLoggedInUser(context.req);
   }
 
-  @Query(() => ForgotPasswordResponse)
- 
+  @Mutation(() => ForgotPasswordResponse)
   async forgotPassword(
-    @Args('forgotPasswordDto')forgotPassDto:ForgotPassDto,
+    @Args('forgotPasswordDto')forgotPasswordDto:ForgotPasswordDto,
     ):Promise<ForgotPasswordResponse> {
-    return await this.userService.forgotPassword(forgotPassDto);
+    return await this.userService.forgotPassword(forgotPasswordDto);
+  }
+
+  @Query(() => ResetPasswordResponse)
+  async resetPassword(
+    @Args('resetPasswordDto')resetPasswordDto:ResetPasswordDto,
+    ):Promise<ResetPasswordResponse> {
+    return await this.userService.resetPassword(resetPasswordDto);
   }
 
 

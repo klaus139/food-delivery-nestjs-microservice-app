@@ -42,7 +42,7 @@ const Login = ({setActiveState, setOpen}:{setActiveState:(e:string) => void, set
             Cookies.set("access_token", response.data.Login.accessToken);
             setOpen(false)
             reset();
-            //window.location.reload();
+            window.location.reload();
             }else{
                 toast.error(response?.data?.Login?.error?.message)
             }

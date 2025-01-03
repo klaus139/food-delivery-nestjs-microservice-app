@@ -2,7 +2,7 @@ import { BadRequestException, Injectable, InternalServerErrorException } from '@
 import { ConfigService } from '@nestjs/config';
 import { JwtService, JwtVerifyOptions } from '@nestjs/jwt';
 //import { Response } from 'express';
-import { ActivationDto, ForgotPassDto, LoginDto, RegisterDto } from './dto/user.dto';
+import { ActivationDto, ForgotPasswordDto, LoginDto, RegisterDto, ResetPasswordDto } from './dto/user.dto';
 import { Prisma, User } from '@prisma/client';
 import { PrismaService } from '../../../prisma/prisma.service';
 import { Response } from 'express';
@@ -269,7 +269,7 @@ async forgotPasswordLink(user:User){
 
 }
 
-async forgotPassword(forgotPasswordDto:ForgotPassDto){
+async forgotPassword(forgotPasswordDto:ForgotPasswordDto){
   const {email} = forgotPasswordDto;
   const user = await this.prisma.user.findUnique({
     where:{
@@ -292,6 +292,36 @@ async forgotPassword(forgotPasswordDto:ForgotPassDto){
   })
   return {message: `Your forgor password request has been successful!`}
   
+}
+
+
+async resetPassword(resetPasswordDto:ResetPasswordDto){
+  const {password, activationToken} = resetPasswordDto;
+  const decoded = await this.jwtService.decode(activationToken);
+
+  if(!decoded){
+    throw new BadRequestException("Invalid Token")
+  }
+  const hashedPassword = await bcrypt.hash(password, 10);
+
+  // const user = await this.prisma.user.findUnique({
+  //   where:{
+  //     id:decoded.user.id
+  //   }
+  // })
+
+ 
+    const user = await this.prisma.user.update({
+      where:{
+        id:decoded.user.id
+      },
+      data:{
+        password:hashedPassword
+      }
+    });
+    return {user}
+
+
 }
 
 //logout user

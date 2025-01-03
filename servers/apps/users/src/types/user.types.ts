@@ -63,3 +63,13 @@ export class ForgotPasswordResponse{
     @Field(() => ErrorType, {nullable:true})
     error?:ErrorType;
 }
+
+
+@ObjectType()
+export class ResetPasswordResponse{
+    @Field(()=> User)
+    user:User | any;
+
+    @Field(() => ErrorType, {nullable:true})
+    error?:ErrorType;
+}
